@@ -1,12 +1,9 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
-import { GoogleIcon, AppleIcon, TogglIcon } from "./CustomIcons";
-import KeyIcon from "@mui/icons-material/Key";
-import SecurityIcon from "@mui/icons-material/Security";
+import { TogglIcon } from "./CustomIcons";
 import type { LoginFormProps } from "../types/base";
 import { Card, SignInContainer } from "./styled";
 import { useLogin } from "../hooks/useLogin";
@@ -76,43 +73,6 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
             disabled={isLoading}
           >
             {isLoading ? "Signing in..." : "Sign in"}
-          </Button>
-        </Box>
-        <Divider>or</Divider>
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={() => alert("Sign in with Google")}
-            startIcon={<GoogleIcon />}
-          >
-            Google
-          </Button>
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={() => alert("Sign in with Apple")}
-            startIcon={<AppleIcon />}
-          >
-            Apple
-          </Button>
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={() => alert("Sign in with Passkey")}
-            startIcon={<KeyIcon />}
-          >
-            Passkey
-          </Button>
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={() => alert("Sign in with SSO")}
-            startIcon={<SecurityIcon />}
-          >
-            SSO
           </Button>
         </Box>
       </Card>
