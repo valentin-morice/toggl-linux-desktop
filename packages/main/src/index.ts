@@ -10,6 +10,7 @@ import { allowExternalUrls } from "./modules/ExternalUrls.js";
 import { chromeDevToolsExtension } from "./modules/ChromeDevToolsExtension.js";
 import { createTrayManagerModule } from "./modules/TrayManager.js";
 import { createDarkModeHandlerModule } from "./modules/DarkModeHandler.js";
+import { createApiHandlerModule } from "./modules/ApiHandler.js";
 
 export async function initApp(initConfig: AppInitConfig) {
   const moduleRunner = createModuleRunner()
@@ -26,6 +27,7 @@ export async function initApp(initConfig: AppInitConfig) {
     .init(chromeDevToolsExtension({ extension: "REACT_DEVELOPER_TOOLS" }))
     .init(createTrayManagerModule({ initConfig }))
     .init(createDarkModeHandlerModule())
+    .init(createApiHandlerModule())
 
     // Install DevTools extension if needed
     // .init(chromeDevToolsExtension({extension: 'VUEJS3_DEVTOOLS'}))

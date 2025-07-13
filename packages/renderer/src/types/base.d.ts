@@ -22,11 +22,27 @@ export interface ThemeToggleProps {
   onToggle: () => void;
 }
 
+export interface ToastProviderProps {
+  children: React.ReactNode;
+}
+
+export interface CustomToastProps {
+  id: string | number;
+  message: string;
+  variant: VariantType;
+}
+
 declare global {
   interface Window {
     darkMode: {
       toggle: () => Promise<boolean>;
       system: () => Promise<void>;
     };
+    login: (credentials: { email: string; password: string }) => Promise<{
+      success: boolean;
+      data?: any;
+      error?: string;
+      status?: number;
+    }>;
   }
 }

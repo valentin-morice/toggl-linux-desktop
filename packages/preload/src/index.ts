@@ -6,10 +6,15 @@ function send(channel: string, message: string) {
   return ipcRenderer.invoke(channel, message);
 }
 
+// Login API
+const login = async (credentials: { email: string; password: string }) => {
+  return ipcRenderer.invoke("api:login", credentials);
+};
+
 // Dark mode API
 const darkMode = {
   toggle: () => ipcRenderer.invoke("dark-mode:toggle"),
   system: () => ipcRenderer.invoke("dark-mode:system"),
 };
 
-export { sha256sum, versions, send, darkMode };
+export { sha256sum, versions, send, darkMode, login };

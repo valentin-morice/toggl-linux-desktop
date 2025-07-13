@@ -13,5 +13,8 @@ for (const exportsKey in exports) {
 // Expose darkMode API directly
 contextBridge.exposeInMainWorld("darkMode", exports.darkMode);
 
+// Expose login API directly
+contextBridge.exposeInMainWorld("login", exports.login);
+
 // Re-export for tests
 export * from "./index.js";

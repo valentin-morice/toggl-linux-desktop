@@ -61,11 +61,6 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
               color={errors.password ? "error" : "primary"}
             />
           </FormControl>
-          {errors.general && (
-            <Box sx={{ color: "error.main", fontSize: "0.875rem" }}>
-              {errors.general}
-            </Box>
-          )}
           <Button
             type="submit"
             fullWidth

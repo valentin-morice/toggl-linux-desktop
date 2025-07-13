@@ -1,6 +1,7 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { LoginForm } from "./components/LoginForm";
+import { ToastProvider } from "./components/ToastProvider";
 import type { AppProps } from "./types/base";
 
 export default function SignIn({ onToggleTheme }: AppProps) {
@@ -9,11 +10,13 @@ export default function SignIn({ onToggleTheme }: AppProps) {
   };
 
   return (
-    <section>
-      <CssBaseline enableColorScheme />
-      <div className="draggable-region" />
-      <ThemeToggle onToggle={onToggleTheme} />
-      <LoginForm onSubmit={handleFormSubmit} />
-    </section>
+    <ToastProvider>
+      <section>
+        <CssBaseline enableColorScheme />
+        <div className="draggable-region" />
+        <ThemeToggle onToggle={onToggleTheme} />
+        <LoginForm onSubmit={handleFormSubmit} />
+      </section>
+    </ToastProvider>
   );
 }

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { loginSchema } from "../schemas/base";
 import type { UseLoginReturn, LoginFormProps } from "../types/base";
+import { useToast } from "./useToast";
 
 export function useLogin({ onSubmit }: LoginFormProps = {}): UseLoginReturn {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const { showError, showSuccess } = useToast();
 
   const resetErrors = () => {
     setErrors({});
@@ -40,18 +42,38 @@ export function useLogin({ onSubmit }: LoginFormProps = {}): UseLoginReturn {
 
       setErrors({});
 
-      if (onSubmit) {
-        await onSubmit(validationResult.data);
-      } else {
-        console.log(validationResult.data);
+      try {
+        const result = await window.login(validationResult.data);
+
+        if (result.success) {
+          console.log("Login successful:", result.data);
+          showSuccess("Login successful! Welcome back.");
+
+          if (onSubmit) {
+            await onSubmit(validationResult.data);
+          }
+        } else {
+          const errorMessage = result.error || "Login failed";
+          showError(errorMessage);
+          setErrors({
+            general: errorMessage,
+          });
+        }
+      } catch (apiError: any) {
+        const errorMessage =
+          apiError?.message || "An unexpected error occurred during login.";
+        showError(errorMessage);
+        setErrors({
+          general: errorMessage,
+        });
       }
     } catch (error) {
       console.error("Login error:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+      showError(errorMessage);
       setErrors({
-        general:
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred",
+        general: errorMessage,
       });
     } finally {
       setIsLoading(false);
