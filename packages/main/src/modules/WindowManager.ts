@@ -2,6 +2,7 @@ import type { AppModule } from "../AppModule.js";
 import { ModuleContext } from "../ModuleContext.js";
 import { BrowserWindow, nativeTheme } from "electron";
 import type { AppInitConfig } from "../AppInitConfig.js";
+import { join } from "path";
 
 class WindowManager implements AppModule {
   readonly #preload: { path: string };
@@ -42,7 +43,14 @@ class WindowManager implements AppModule {
   }
 
   async createWindow(): Promise<BrowserWindow> {
+    const basePath = import.meta.env.DEV
+      ? process.cwd()
+      : process.resourcesPath;
+
+    const icon = join(basePath, "buildResources", "desktop_icon.png");
+
     const browserWindow = new BrowserWindow({
+      icon,
       titleBarStyle: "hidden",
       ...(process.platform !== "darwin" ? { titleBarOverlay: true } : {}),
       titleBarOverlay: {

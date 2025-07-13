@@ -21,7 +21,6 @@ export function ThemeToggle({ onToggle }: ThemeToggleProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Listen for theme changes
     const updateTheme = () => {
       setIsDarkMode(theme.palette.mode === "dark");
     };
@@ -32,10 +31,10 @@ export function ThemeToggle({ onToggle }: ThemeToggleProps) {
     try {
       const isDark = await window.darkMode.toggle();
       setIsDarkMode(isDark);
-      onToggle(); // Trigger the MUI theme toggle as well
+      onToggle();
     } catch (error) {
       console.error("Failed to toggle dark mode:", error);
-      onToggle(); // Fallback to just MUI theme toggle
+      onToggle();
     }
   };
 
