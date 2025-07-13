@@ -1,34 +1,63 @@
-import type {AppModule} from '../AppModule.js';
-import {ModuleContext} from '../ModuleContext.js';
-import {BrowserWindow} from 'electron';
-import type {AppInitConfig} from '../AppInitConfig.js';
+import type { AppModule } from "../AppModule.js";
+import { ModuleContext } from "../ModuleContext.js";
+import { BrowserWindow, nativeTheme } from "electron";
+import type { AppInitConfig } from "../AppInitConfig.js";
 
 class WindowManager implements AppModule {
-  readonly #preload: {path: string};
-  readonly #renderer: {path: string} | URL;
+  readonly #preload: { path: string };
+  readonly #renderer: { path: string } | URL;
   readonly #openDevTools;
 
-  constructor({initConfig, openDevTools = false}: {initConfig: AppInitConfig, openDevTools?: boolean}) {
+  constructor({
+    initConfig,
+    openDevTools = false,
+  }: {
+    initConfig: AppInitConfig;
+    openDevTools?: boolean;
+  }) {
     this.#preload = initConfig.preload;
     this.#renderer = initConfig.renderer;
     this.#openDevTools = openDevTools;
   }
 
-  async enable({app}: ModuleContext): Promise<void> {
+  async enable({ app }: ModuleContext): Promise<void> {
     await app.whenReady();
     await this.restoreOrCreateWindow(true);
-    app.on('second-instance', () => this.restoreOrCreateWindow(true));
-    app.on('activate', () => this.restoreOrCreateWindow(true));
+    app.on("second-instance", () => this.restoreOrCreateWindow(true));
+    app.on("activate", () => this.restoreOrCreateWindow(true));
+
+    nativeTheme.on("updated", () => {
+      const windows = BrowserWindow.getAllWindows();
+      windows.forEach((window) => {
+        if (!window.isDestroyed()) {
+          const isDarkMode = nativeTheme.shouldUseDarkColors;
+
+          window.setTitleBarOverlay({
+            symbolColor: isDarkMode ? "#FFFFFF" : "#000000",
+            color: isDarkMode ? "rgb(9, 9, 13)" : "white",
+          });
+        }
+      });
+    });
   }
 
   async createWindow(): Promise<BrowserWindow> {
     const browserWindow = new BrowserWindow({
-      show: false, // Use the 'ready-to-show' event to show the instantiated BrowserWindow.
+      titleBarStyle: "hidden",
+      ...(process.platform !== "darwin" ? { titleBarOverlay: true } : {}),
+      titleBarOverlay: {
+        height: 30,
+        symbolColor: "#000000",
+        color: "white",
+      },
+      width: 480,
+      height: 820,
+      resizable: false,
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        sandbox: false, // Sandbox disabled because the demo of preload script depend on the Node.js api
-        webviewTag: false, // The webview tag is not recommended. Consider alternatives like an iframe or Electron's BrowserView. @see https://www.electronjs.org/docs/latest/api/webview-tag#warning
+        sandbox: false,
+        webviewTag: false,
         preload: this.#preload.path,
       },
     });
@@ -43,7 +72,7 @@ class WindowManager implements AppModule {
   }
 
   async restoreOrCreateWindow(show = false) {
-    let window = BrowserWindow.getAllWindows().find(w => !w.isDestroyed());
+    let window = BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
 
     if (window === undefined) {
       window = await this.createWindow();
@@ -67,9 +96,10 @@ class WindowManager implements AppModule {
 
     return window;
   }
-
 }
 
-export function createWindowManagerModule(...args: ConstructorParameters<typeof WindowManager>) {
+export function createWindowManagerModule(
+  ...args: ConstructorParameters<typeof WindowManager>
+) {
   return new WindowManager(...args);
 }
