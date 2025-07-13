@@ -17,3 +17,16 @@ export interface LoginFormProps {
 interface AppProps {
   onToggleTheme: () => void;
 }
+
+export interface ThemeToggleProps {
+  onToggle: () => void;
+}
+
+declare global {
+  interface Window {
+    darkMode: {
+      toggle: () => Promise<boolean>;
+      system: () => Promise<void>;
+    };
+  }
+}

@@ -2,19 +2,7 @@ import { IconButton, useTheme } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useState, useEffect } from "react";
-
-interface ThemeToggleProps {
-  onToggle: () => void;
-}
-
-declare global {
-  interface Window {
-    darkMode: {
-      toggle: () => Promise<boolean>;
-      system: () => Promise<void>;
-    };
-  }
-}
+import type { ThemeToggleProps } from "../types/base";
 
 export function ThemeToggle({ onToggle }: ThemeToggleProps) {
   const theme = useTheme();
