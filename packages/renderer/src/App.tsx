@@ -1,22 +1,32 @@
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeToggle } from "./components/ThemeToggle";
-import { LoginForm } from "./components/LoginForm";
+import { useState, useEffect } from "react";
 import { ToastProvider } from "./components/ToastProvider";
 import type { AppProps } from "./types/base";
+import { storage, type UserData } from "./utils/storage";
+import { AppWithLogin } from "./components/AppWithLogin";
 
 export default function SignIn({ onToggleTheme }: AppProps) {
-  const handleFormSubmit = (data: { email: string; password: string }) => {
-    console.log(data);
-  };
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const token = storage.getToken();
+    const user = storage.getUserData();
+
+    if (token && user) {
+      setIsAuthenticated(true);
+      setUserData(user);
+    }
+  }, []);
 
   return (
     <ToastProvider>
-      <section>
-        <CssBaseline enableColorScheme />
-        <div className="draggable-region" />
-        <ThemeToggle onToggle={onToggleTheme} />
-        <LoginForm onSubmit={handleFormSubmit} />
-      </section>
+      <AppWithLogin
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
+        userData={userData}
+        setUserData={setUserData}
+        onToggleTheme={onToggleTheme}
+      />
     </ToastProvider>
   );
 }

@@ -4,13 +4,20 @@ import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import { TogglIcon } from "./CustomIcons";
-import type { LoginFormProps } from "../types/base";
 import { Card, SignInContainer } from "./styled";
-import { useLogin } from "../hooks/useLogin";
 
-export function LoginForm({ onSubmit }: LoginFormProps) {
-  const { errors, isLoading, handleSubmit } = useLogin({ onSubmit });
+type LoginFormUIProps = {
+  errors: Record<string, string>;
+  isLoading: boolean;
+  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  resetErrors: () => void;
+};
 
+export function LoginForm({
+  errors,
+  isLoading,
+  handleSubmit,
+}: LoginFormUIProps) {
   return (
     <SignInContainer direction="column" justifyContent="space-between">
       <Card variant="outlined">

@@ -3,6 +3,9 @@ import { z } from "zod";
 
 export type LoginFormData = z.infer<typeof loginSchema>;
 
+// Re-export UserData from storage utils
+export type { UserData } from "../utils/storage";
+
 export interface UseLoginReturn {
   errors: Record<string, string>;
   isLoading: boolean;
@@ -14,12 +17,14 @@ export interface LoginFormProps {
   onSubmit?: (data: LoginFormData) => void | Promise<void>;
 }
 
-interface AppProps {
+export interface AppProps {
   onToggleTheme: () => void;
 }
 
-export interface ThemeToggleProps {
-  onToggle: () => void;
+export interface HeaderControlsProps {
+  onToggleTheme: () => void;
+  onLogout: () => void;
+  isAuthenticated: boolean;
 }
 
 export interface ToastProviderProps {
