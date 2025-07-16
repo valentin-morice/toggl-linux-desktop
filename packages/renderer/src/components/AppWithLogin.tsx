@@ -1,10 +1,12 @@
 import { CssBaseline } from "@mui/material";
 import { HeaderControls } from "./HeaderControls";
-import { Index } from "./Index";
+import Profile from "./tabs/profile";
 import { LoginForm } from "./LoginForm";
 import { useLogin } from "../hooks/useLogin";
 import { storage, type UserData } from "../utils/storage";
 import React from "react";
+import { Timer } from "./tabs/Timer";
+import { BottomTabs } from "./BottomTabs";
 
 export function AppWithLogin({
   isAuthenticated,
@@ -35,6 +37,10 @@ export function AppWithLogin({
       },
     });
 
+  const [activeTab, setActiveTab] = React.useState<"profile" | "timer">(
+    "profile"
+  );
+
   return (
     <section>
       <CssBaseline enableColorScheme />
@@ -45,11 +51,18 @@ export function AppWithLogin({
         isAuthenticated={isAuthenticated}
       />
       {isAuthenticated && userData ? (
-        <Index
-          onToggleTheme={onToggleTheme}
-          onLogout={handleLogout}
-          userData={userData}
-        />
+        <>
+          {activeTab === "profile" ? (
+            <Profile
+              onToggleTheme={onToggleTheme}
+              onLogout={handleLogout}
+              userData={userData}
+            />
+          ) : (
+            <Timer />
+          )}
+          <BottomTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        </>
       ) : (
         <LoginForm
           errors={errors}
