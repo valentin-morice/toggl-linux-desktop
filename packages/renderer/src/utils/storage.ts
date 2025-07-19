@@ -1,5 +1,9 @@
 const TOKEN_KEY = "toggl_api_token";
 const USER_DATA_KEY = "toggl_user_data";
+const ORGANIZATIONS_KEY = "toggl_organizations";
+const ORGANIZATIONS_EXPIRY_KEY = "toggl_organizations_expiry";
+const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const SETTINGS_KEY = "toggl_settings";
 
 export interface UserData {
   id: number;
@@ -76,6 +80,65 @@ export const storage = {
     }
   },
 
+  getOrganizations: (): any[] | null => {
+    try {
+      const expiry = localStorage.getItem(ORGANIZATIONS_EXPIRY_KEY);
+      if (!expiry || Date.now() > Number(expiry)) {
+        storage.removeOrganizations();
+        return null;
+      }
+      const data = localStorage.getItem(ORGANIZATIONS_KEY);
+      if (!data) return null;
+      const parsed = JSON.parse(data);
+      // Ensure it's always an array
+      return Array.isArray(parsed) ? parsed : Array.from(parsed);
+    } catch (error) {
+      console.error("Error getting organizations from storage:", error);
+      return null;
+    }
+  },
+
+  setOrganizations: (orgs: any[]): void => {
+    try {
+      // Always store as a real array
+      const arr = Array.isArray(orgs) ? orgs : Array.from(orgs);
+      localStorage.setItem(ORGANIZATIONS_KEY, JSON.stringify(arr));
+      localStorage.setItem(
+        ORGANIZATIONS_EXPIRY_KEY,
+        String(Date.now() + ONE_WEEK_MS)
+      );
+    } catch (error) {
+      console.error("Error setting organizations in storage:", error);
+    }
+  },
+
+  removeOrganizations: (): void => {
+    try {
+      localStorage.removeItem(ORGANIZATIONS_KEY);
+      localStorage.removeItem(ORGANIZATIONS_EXPIRY_KEY);
+    } catch (error) {
+      console.error("Error removing organizations from storage:", error);
+    }
+  },
+
+  getSettings: (): any => {
+    try {
+      const data = localStorage.getItem(SETTINGS_KEY);
+      return data ? JSON.parse(data) : {};
+    } catch (error) {
+      console.error("Error getting settings from storage:", error);
+      return {};
+    }
+  },
+
+  setSettings: (settings: any): void => {
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    } catch (error) {
+      console.error("Error setting settings in storage:", error);
+    }
+  },
+
   isAuthenticated: (): boolean => {
     return !!storage.getToken();
   },
@@ -83,5 +146,6 @@ export const storage = {
   clearAuth: (): void => {
     storage.removeToken();
     storage.removeUserData();
+    storage.removeOrganizations();
   },
 };

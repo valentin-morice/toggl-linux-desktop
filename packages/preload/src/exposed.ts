@@ -10,11 +10,13 @@ for (const exportsKey in exports) {
   }
 }
 
-// Expose darkMode API directly
-contextBridge.exposeInMainWorld("darkMode", exports.darkMode);
-
-// Expose login API directly
-contextBridge.exposeInMainWorld("login", exports.login);
+// Expose all APIs under a single namespace
+contextBridge.exposeInMainWorld("togglAPI", {
+  getOrganizations: exports.getOrganizations,
+  getWorkspaces: exports.getWorkspaces,
+  login: exports.login,
+  darkMode: exports.darkMode,
+});
 
 // Re-export for tests
 export * from "./index.js";

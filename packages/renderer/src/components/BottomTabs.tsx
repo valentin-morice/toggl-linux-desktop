@@ -3,11 +3,14 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import PersonIcon from "@mui/icons-material/Person";
 import TimerIcon from "@mui/icons-material/Timer";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useTheme } from "@mui/material/styles";
 
 interface BottomTabsProps {
-  activeTab: "profile" | "timer";
-  setActiveTab: React.Dispatch<React.SetStateAction<"profile" | "timer">>;
+  activeTab: "profile" | "timer" | "settings";
+  setActiveTab: React.Dispatch<
+    React.SetStateAction<"profile" | "timer" | "settings">
+  >;
 }
 
 export const BottomTabs: React.FC<BottomTabsProps> = ({
@@ -15,7 +18,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({
   setActiveTab,
 }) => {
   const theme = useTheme();
-  const tabIndex = activeTab === "profile" ? 0 : 1;
+  const tabIndex = activeTab === "profile" ? 0 : activeTab === "timer" ? 1 : 2;
   return (
     <div
       style={{
@@ -32,7 +35,9 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({
       <Tabs
         value={tabIndex}
         onChange={(_, newValue) =>
-          setActiveTab(newValue === 0 ? "profile" : "timer")
+          setActiveTab(
+            newValue === 0 ? "profile" : newValue === 1 ? "timer" : "settings"
+          )
         }
         variant="fullWidth"
         indicatorColor="primary"
@@ -40,6 +45,7 @@ export const BottomTabs: React.FC<BottomTabsProps> = ({
       >
         <Tab icon={<PersonIcon />} aria-label="Profile" />
         <Tab icon={<TimerIcon />} aria-label="Timer" />
+        <Tab icon={<SettingsIcon />} aria-label="Settings" />
       </Tabs>
     </div>
   );

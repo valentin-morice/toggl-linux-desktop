@@ -1,13 +1,20 @@
-import { Table, TableBody, TableRow, TableCell } from "@mui/material";
+import { Table, TableBody, TableRow, TableCell, Fade } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import type { UserData } from "../../../utils/storage";
 
 interface ProfileInfoTableProps {
   userData: UserData;
+  organizations?: any[];
 }
 
-export default function ProfileInfoTable({ userData }: ProfileInfoTableProps) {
+export default function ProfileInfoTable({
+  userData,
+  organizations = [],
+}: ProfileInfoTableProps) {
+  const orgNames = organizations.map((org) => org.name).join(", ");
+  const orgsLoading = organizations.length === 0;
+  const showOrgNames = !orgsLoading;
   return (
     <Table
       size="small"
@@ -21,43 +28,7 @@ export default function ProfileInfoTable({ userData }: ProfileInfoTableProps) {
       <TableBody>
         <TableRow
           sx={(theme) => ({
-            backgroundColor: theme.palette.background.paper,
-            height: 40,
-            minHeight: 40,
-          })}
-        >
-          <TableCell
-            component="th"
-            scope="row"
-            sx={{ fontWeight: 600, border: 0, pl: 0, px: 2, py: 1 }}
-          >
-            Timezone
-          </TableCell>
-          <TableCell align="right" sx={{ border: 0, pr: 0, px: 2, py: 1 }}>
-            {userData.timezone}
-          </TableCell>
-        </TableRow>
-        <TableRow
-          sx={(theme) => ({
             backgroundColor: theme.palette.action.hover,
-            height: 40,
-            minHeight: 40,
-          })}
-        >
-          <TableCell
-            component="th"
-            scope="row"
-            sx={{ fontWeight: 600, border: 0, pl: 0, px: 2, py: 1 }}
-          >
-            Workspace ID
-          </TableCell>
-          <TableCell align="right" sx={{ border: 0, pr: 0, px: 2, py: 1 }}>
-            {userData.default_workspace_id}
-          </TableCell>
-        </TableRow>
-        <TableRow
-          sx={(theme) => ({
-            backgroundColor: theme.palette.background.paper,
             height: 40,
             minHeight: 40,
           })}
@@ -79,6 +50,30 @@ export default function ProfileInfoTable({ userData }: ProfileInfoTableProps) {
         </TableRow>
         <TableRow
           sx={(theme) => ({
+            backgroundColor: theme.palette.background.paper,
+            height: 40,
+            minHeight: 40,
+          })}
+        >
+          <TableCell
+            component="th"
+            scope="row"
+            sx={{ fontWeight: 600, border: 0, pl: 0, px: 2, py: 1 }}
+          >
+            Organizations
+          </TableCell>
+          <TableCell align="right" sx={{ border: 0, pr: 0, px: 2, py: 1 }}>
+            {orgsLoading ? (
+              ""
+            ) : (
+              <Fade in={showOrgNames} timeout={100}>
+                <span>{orgNames || "—"}</span>
+              </Fade>
+            )}
+          </TableCell>
+        </TableRow>
+        <TableRow
+          sx={(theme) => ({
             backgroundColor: theme.palette.action.hover,
             height: 40,
             minHeight: 40,
@@ -89,10 +84,10 @@ export default function ProfileInfoTable({ userData }: ProfileInfoTableProps) {
             scope="row"
             sx={{ fontWeight: 600, border: 0, pl: 0, px: 2, py: 1 }}
           >
-            Your Plan
+            Timezone
           </TableCell>
           <TableCell align="right" sx={{ border: 0, pr: 0, px: 2, py: 1 }}>
-            —
+            {userData.timezone}
           </TableCell>
         </TableRow>
       </TableBody>

@@ -37,6 +37,57 @@ export function createApiHandlerModule(): AppModule {
           }
         }
       );
+
+      // Add handler for fetching organizations
+      ipcMain.handle(
+        "api:getOrganizations",
+        async (event, apiToken: string) => {
+          try {
+            const response = await axios.get(
+              "https://api.track.toggl.com/api/v9/me/organizations",
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Basic ${Buffer.from(
+                    apiToken + ":api_token"
+                  ).toString("base64")}`,
+                },
+              }
+            );
+            return { success: true, data: response.data };
+          } catch (error: any) {
+            return {
+              success: false,
+              error: error?.message || "Failed to fetch organizations.",
+              status: error?.response?.status || 0,
+            };
+          }
+        }
+      );
+
+      // Add handler for fetching workspaces
+      ipcMain.handle("api:getWorkspaces", async (event, apiToken: string) => {
+        try {
+          const response = await axios.get(
+            "https://api.track.toggl.com/api/v9/workspaces",
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Basic ${Buffer.from(
+                  apiToken + ":api_token"
+                ).toString("base64")}`,
+              },
+            }
+          );
+          return { success: true, data: response.data };
+        } catch (error: any) {
+          return {
+            success: false,
+            error: error?.message || "Failed to fetch workspaces.",
+            status: error?.response?.status || 0,
+          };
+        }
+      });
     },
   };
 }

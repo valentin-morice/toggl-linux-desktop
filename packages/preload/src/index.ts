@@ -17,4 +17,40 @@ const darkMode = {
   system: () => ipcRenderer.invoke("dark-mode:system"),
 };
 
-export { sha256sum, versions, send, darkMode, login };
+const getOrganizations = async () => {
+  let token: string | null = null;
+  try {
+    token = localStorage.getItem("toggl_api_token");
+  } catch (error) {
+    console.error("Error getting token from storage in preload:", error);
+    return { success: false, error: "No token found in storage." };
+  }
+  if (!token) {
+    return { success: false, error: "No token found in storage." };
+  }
+  return ipcRenderer.invoke("api:getOrganizations", token);
+};
+
+const getWorkspaces = async () => {
+  let token: string | null = null;
+  try {
+    token = localStorage.getItem("toggl_api_token");
+  } catch (error) {
+    console.error("Error getting token from storage in preload:", error);
+    return { success: false, error: "No token found in storage." };
+  }
+  if (!token) {
+    return { success: false, error: "No token found in storage." };
+  }
+  return ipcRenderer.invoke("api:getWorkspaces", token);
+};
+
+export {
+  sha256sum,
+  versions,
+  send,
+  darkMode,
+  login,
+  getOrganizations,
+  getWorkspaces,
+};

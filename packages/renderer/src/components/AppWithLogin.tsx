@@ -7,6 +7,7 @@ import { storage, type UserData } from "../utils/storage";
 import React from "react";
 import { Timer } from "./tabs/Timer";
 import { BottomTabs } from "./BottomTabs";
+import Settings from "./tabs/Settings";
 
 export function AppWithLogin({
   isAuthenticated,
@@ -37,9 +38,9 @@ export function AppWithLogin({
       },
     });
 
-  const [activeTab, setActiveTab] = React.useState<"profile" | "timer">(
-    "profile"
-  );
+  const [activeTab, setActiveTab] = React.useState<
+    "profile" | "timer" | "settings"
+  >("profile");
 
   return (
     <section>
@@ -58,8 +59,10 @@ export function AppWithLogin({
               onLogout={handleLogout}
               userData={userData}
             />
-          ) : (
+          ) : activeTab === "timer" ? (
             <Timer />
+          ) : (
+            <Settings />
           )}
           <BottomTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         </>

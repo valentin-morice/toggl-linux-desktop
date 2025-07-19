@@ -22,7 +22,7 @@ export function HeaderControls({
 
   const handleToggle = async () => {
     try {
-      const isDark = await window.darkMode.toggle();
+      const isDark = await window.togglAPI.darkMode.toggle();
       setIsDarkMode(isDark);
       onToggleTheme();
     } catch (error) {

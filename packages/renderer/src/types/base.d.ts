@@ -37,17 +37,15 @@ export interface CustomToastProps {
   variant: VariantType;
 }
 
+interface TogglAPI {
+  getOrganizations: () => Promise<any>;
+  getWorkspaces: () => Promise<any>;
+  login: (...args: any[]) => Promise<any>;
+  darkMode: any;
+}
+
 declare global {
   interface Window {
-    darkMode: {
-      toggle: () => Promise<boolean>;
-      system: () => Promise<void>;
-    };
-    login: (credentials: { email: string; password: string }) => Promise<{
-      success: boolean;
-      data?: any;
-      error?: string;
-      status?: number;
-    }>;
+    togglAPI: TogglAPI;
   }
 }

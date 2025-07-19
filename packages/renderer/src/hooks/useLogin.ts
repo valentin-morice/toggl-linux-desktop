@@ -53,7 +53,7 @@ export function useLogin({
       }
       setErrors({});
 
-      const result = await window.login(validData!);
+      const result = await window.togglAPI.login(validData!);
       if (result.success) {
         storage.setToken(result.data.api_token);
         storage.setUserData(result.data);
